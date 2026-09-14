@@ -7,11 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Function to fetch activities from API
   async function fetchActivities() {
     try {
-      const response = await fetch("/activities", { cache: "no-store" });
-      if (!response.ok) {
-        throw new Error("Unable to load activities");
-      }
-
+      const response = await fetch("/activities");
       const activities = await response.json();
 
       // Clear loading message
@@ -36,8 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
         participantsSection.className = "participants-section";
 
         const participantsHeading = document.createElement("h5");
-        participantsHeading.textContent =
-          `Registered participants (${details.participants.length})`;
+        participantsHeading.textContent = "Participants";
 
         const participantsList = document.createElement("ul");
         participantsList.className = "participants-list";
@@ -50,37 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
           details.participants.forEach((participant) => {
             const participantItem = document.createElement("li");
-
-            const participantEmail = document.createElement("span");
-            participantEmail.textContent = participant;
-
-            const removeButton = document.createElement("button");
-            removeButton.type = "button";
-            removeButton.className = "remove-participant";
-            removeButton.textContent = "×";
-            removeButton.title = `Remove ${participant}`;
-            removeButton.setAttribute("aria-label", `Remove ${participant}`);
-            removeButton.addEventListener("click", async () => {
-              try {
-                const response = await fetch(
-                  `/activities/${encodeURIComponent(name)}/signup?email=${encodeURIComponent(participant)}`,
-                  { method: "DELETE" }
-                );
-                const result = await response.json();
-
-                if (!response.ok) {
-                  throw new Error(result.detail || "Unable to remove participant");
-                }
-
-                await fetchActivities();
-              } catch (error) {
-                messageDiv.textContent = error.message;
-                messageDiv.className = "error";
-                messageDiv.classList.remove("hidden");
-              }
-            });
-
-            participantItem.append(participantEmail, removeButton);
+            participantItem.textContent = participant;
             participantsList.appendChild(participantItem);
           });
         }
