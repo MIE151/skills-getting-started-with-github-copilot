@@ -36,7 +36,8 @@ document.addEventListener("DOMContentLoaded", () => {
         participantsSection.className = "participants-section";
 
         const participantsHeading = document.createElement("h5");
-        participantsHeading.textContent = "Participants";
+        participantsHeading.textContent =
+          `Registered participants (${details.participants.length})`;
 
         const participantsList = document.createElement("ul");
         participantsList.className = "participants-list";
