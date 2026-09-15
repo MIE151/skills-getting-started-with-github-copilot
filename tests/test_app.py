@@ -97,6 +97,27 @@ def test_duplicate_signup_returns_bad_request():
     assert activities[activity_name]["participants"] == original_participants
 
 
+def test_signup_in_fourth_activity_returns_bad_request():
+    # Arrange
+    email = "three-activities@mergington.edu"
+    registered_activities = ["Basketball Team", "Track and Field", "Art Club"]
+    for activity_name in registered_activities:
+        activities[activity_name]["participants"].append(email)
+
+    # Act
+    response = client.post(
+        "/activities/Drama Club/signup",
+        params={"email": email},
+    )
+
+    # Assert
+    assert response.status_code == 400
+    assert response.json()["detail"] == (
+        "Students can sign up for a maximum of three activities"
+    )
+    assert email not in activities["Drama Club"]["participants"]
+
+
 def test_signup_without_email_returns_unprocessable_entity():
     # Arrange
     activity_name = "Science Club"

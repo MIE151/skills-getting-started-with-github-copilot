@@ -104,6 +104,16 @@ def signup_for_activity(activity_name: str, email: str):
             detail="Student is already signed up for this activity",
         )
 
+    signup_count = sum(
+        email in activity_details["participants"]
+        for activity_details in activities.values()
+    )
+    if signup_count >= 3:
+        raise HTTPException(
+            status_code=400,
+            detail="Students can sign up for a maximum of three activities",
+        )
+
     # Add student
     activity["participants"].append(email)
     return {"message": f"Signed up {email} for {activity_name}"}
